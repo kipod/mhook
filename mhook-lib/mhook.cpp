@@ -183,7 +183,10 @@ static VOID ListRemove(MHOOKS_TRAMPOLINE** pListHead, MHOOKS_TRAMPOLINE* pNode) 
 
 	if ((*pListHead) == pNode) {
 		(*pListHead) = pNode->pNextTrampoline;
-		assert((*pListHead)->pPrevTrampoline == NULL);
+		if ((*pListHead))
+		{
+			assert((*pListHead)->pPrevTrampoline == NULL);
+		}
 	}
 
 	pNode->pPrevTrampoline = NULL;
@@ -881,8 +884,10 @@ BOOL Mhook_Unhook(PVOID *ppHookedFunction) {
 	ODPRINTF((L"mhooks: Mhook_Unhook: %p", *ppHookedFunction));
 	BOOL bRet = FALSE;
 	EnterCritSec();
+	PVOID pHookFunction = *ppHookedFunction;
+	pHookFunction = SkipJumps((PBYTE)pHookFunction);
 	// get the trampoline structure that corresponds to our function
-	MHOOKS_TRAMPOLINE* pTrampoline = TrampolineGet((PBYTE)*ppHookedFunction);
+	MHOOKS_TRAMPOLINE* pTrampoline = TrampolineGet((PBYTE)pHookFunction);
 	if (pTrampoline) {
 		// make sure nobody's executing code where we're about to overwrite a few bytes
 		SuspendOtherThreads(pTrampoline->pSystemFunction, pTrampoline->cbOverwrittenCode);
