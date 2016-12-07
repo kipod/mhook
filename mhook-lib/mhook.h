@@ -17,6 +17,8 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
 //IN THE SOFTWARE.
+#ifndef __M_HOOK
+#define __M_HOOK
 
 #ifdef _M_IX86
 #define _M_IX86_X64
@@ -24,5 +26,7 @@
 #define _M_IX86_X64
 #endif
 
-BOOL Mhook_SetHook(PVOID *ppSystemFunction, PVOID pHookFunction);
-BOOL Mhook_Unhook(PVOID *ppHookedFunction);
+EXTERN_C BOOL Mhook_SetHook(PVOID *ppSystemFunction, PVOID pHookFunction, BOOL bForce = FALSE);
+EXTERN_C BOOL Mhook_Unhook(PVOID *ppHookedFunction);
+
+#endif
